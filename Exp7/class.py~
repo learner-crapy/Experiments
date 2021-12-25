@@ -1,0 +1,42 @@
+import numpy as np
+import os
+from sklearn.decomposition import PCA
+import cv2
+
+# function: extract the img feature with a input of image directory
+# input: the image path of all the image, string
+# output: a list with the narray with shape of (long, width), list
+class PCA_IMG:
+    OriginalImg = []
+    ImgArray = []
+    ImgName = []
+    Label = []
+    pca = PCA(n_components=80)
+    # function: initial the attribute and obtain the path and name
+    # input: imgpath
+    # output: initial self.ImgName
+    def __init__(self, imgpath):
+        self.ImgName = os.listdir(imgpath)
+        for i in range(0, len(self.ImgName)):
+            self.ImgName[i] = imgpath+'/'+self.ImgName[i]
+        self.ReadImg()
+        self.Extract()
+
+    # function: read the img with gray type
+    # input: none, get the img path from self.ImgName
+    # output: initial self.OriginalImg, list
+    def ReadImg(self):
+        for i in range(0, len(self.ImgName)):
+            img = cv2.imread(self.ImgName[i], 0)
+            self.OriginalImg.append(img)
+
+    # function: extract the feature of evey img
+    # input: none, get form self.OriginalImg
+    # output: initial self.ImgArray
+    def Extract(self):
+        for i in range(0, len(self.OriginalImg)):
+            self.ImgArray.append(self.pca.fit_transform(self.OriginalImg[i]))
+
+ImgDirPath = "/gdrive/My Drive/Home/Documents/Demo/PCA/PCA_Extract_Face_Feature/Pictures/AllPictures"
+pca_img = PCA_IMG(ImgDirPath)
+
